@@ -1,5 +1,5 @@
-
-import code #code.interact(local=locals())
+from IPython import embed
+import datetime
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -25,54 +25,50 @@ products = [
 ] # Products based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
 #
-# Capture User Inputes#
+# Capture User Inputs#
 #
 
-print (len(products))
+product_ids = []
 
+while True:
+    product_id = input ("Please input a valid product identifier, or 'DONE' if there are no more items: ")
+    if product_id == "DONE":
+        print("THANKS ALL DONE HERE")
+        break
+    else:
+        product_ids.append(int(product_id))
 
+def lookup_product_by_id(product_id):
+    matching_products = [product for product in products if product["id"] == product_id]
+    return matching_products [0] # because the line above gives us a list and we want to return a single item
 
+#
+#Print receipt
+#
 
+running_total = 0
 
+print("-------------------------------")
+print("ALBERTS FINE GROCERIES")
+print("-------------------------------")
+print("Web: www.albertsfood.com")
+print("Phone: 1.212.555.1234")
+print("Checkout Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%m:%S"))
 
+print("-------------------------------")
+print("Shopping Cart Items:")
+for product_id in product_ids:
+    product = lookup_product_by_id(product_id)
+    running_total += product["price"]
+    price_usd = ' (${0:.2f})'.format(product["price"])
+    print(" + " + product["name"] + price_usd)
 
+print("-------------------------------")
+print("Subtotal:", '${0:.2f}'.format(running_total))
+tax = running_total * 0.08875
+print("Plus NYC Sales Tax (8.875%):", '${0:.2f}'.format(tax))
+total = running_total + tax
+print("Total:", '${0:.2f}'.format(total))
 
-
-
-
-
-
-
-
-
-#Desired Output
-#-------------------------
-#Alberts Groceries
-#-------------------------
-#Web: www.albertsfood.com
-#Phone: 1.212.555.0000
-#Checkout Time: Date & time
-#-------------------------
-#Shopping Cart Items:
-#+
-#+
-#+
-#-------------------------
-#Subtotal:
-#Plus NYC Sales Tax (8.875%):
-#Total:
-#-------------------------
-#Thanks for your business! Please come again
-
-#Requirements (Done & receipt)
-#The program should prompt the checkout clerk to input the identifier of each shopping cart item, one at a time. At any time the clerk should be able to indicate there are no more shopping cart items by inputting the word DONE.
-#After the clerk indicates there are no more items, the program should print a custom receipt on the screen. The receipt should include the following components:
-#A grocery store name of your choice.
-#A grocery store phone number and/or website URL and/or address of choice.
-#The date and time of the beginning of the checkout process, formatted in a human-friendly way.
-#The name and price of each shopping cart item, price being formatted as US dollars and cents (e.g. $1.50), optionally sorted alphabetically by name, optionally grouped by department and displayed underneath the respective department name.
-#The total cost of all shopping cart items, formatted as US dollars and cents (e.g. $1.50), calculated as the sum of their prices.
-#The amount of tax owed, calculated by multiplying the total cost by a New York City sales tax rate of 0.08875.
-#The total amount owed, formatted as US dollars and cents (e.g. $1.63), calculated by adding together the amount of tax owed plus the total cost of all shopping cart items.
-#A friendly message thanking the customer and/or encouraging the customer to shop again.
-#The program should be able to process multiple shopping cart items of the same type, but does not need to display any groupings or aggregations of those items.
+print("-------------------------------")
+print("Thanks for your business! Please come again.")
